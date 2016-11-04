@@ -136,20 +136,20 @@ if [[ ! -e output.vcf.gz.tbi ]]; then
 fi
 
 mark-section "uploading results"
-mkdir -p ~/out/bam/ ~/out/bai/
-mv recal.bam ~/out/bam/"$sorted_bam_prefix".refined.bam
-mv recal.bai ~/out/bai/"$sorted_bam_prefix".refined.bam.bai
+mkdir -p ~/out/bam/output/ ~/out/bai/output/
+mv recal.bam ~/out/bam/output/"$sorted_bam_prefix".refined.bam
+mv recal.bai ~/out/bai/output/"$sorted_bam_prefix".refined.bam.bai
 
 if [[ "$output_format" != "gvcf" ]]; then
-  mkdir -p ~/out/vcf ~/out/vcf_tbi
-  mv output.vcf.gz ~/out/vcf/"$sorted_bam_prefix".vcf.gz
-  mv output.vcf.gz.tbi ~/out/vcf_tbi/"$sorted_bam_prefix".vcf.gz.tbi
+  mkdir -p ~/out/vcf/output/ ~/out/vcf_tbi/output/
+  mv output.vcf.gz ~/out/vcf/output/"$sorted_bam_prefix".vcf.gz
+  mv output.vcf.gz.tbi ~/out/vcf_tbi/output/"$sorted_bam_prefix".vcf.gz.tbi
 fi
 
 if [[ "$output_format" != "vcf" ]]; then
-  mkdir -p ~/out/gvcf ~/out/gvcf_tbi
-  mv output.g.vcf.gz ~/out/gvcf/"$sorted_bam_prefix".g.vcf.gz
-  mv output.g.vcf.gz.tbi ~/out/gvcf_tbi/"$sorted_bam_prefix".g.vcf.gz.tbi
+  mkdir -p ~/out/gvcf/output/ ~/out/gvcf_tbi/output/
+  mv output.g.vcf.gz ~/out/gvcf/output/"$sorted_bam_prefix".g.vcf.gz
+  mv output.g.vcf.gz.tbi ~/out/gvcf_tbi/output/"$sorted_bam_prefix".g.vcf.gz.tbi
 fi
 
 #
