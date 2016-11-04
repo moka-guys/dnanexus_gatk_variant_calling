@@ -1,0 +1,209 @@
+{
+  "name": "gatk3_human_exome_pipeline",
+  "title": "GATK3 Human Exome Pipeline",
+  "summary": "(Requires a user-provided GATK 3.x jar file). Implements the GATK 3.x best practices pipeline for human exomes, including deduplicating, realigning and recalibrating mappings, and calling variants.",
+  "tags": [
+    "Variation Calling",
+    "Pipelines"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "sorted_bam",
+      "label": "Sorted mappings",
+      "help": "A coordinate-sorted BAM file with the human mappings to be processed through the pipeline.",
+      "class": "file",
+      "patterns": ["*.bam"]
+    },
+    {
+      "name": "vendor_exome",
+      "label": "Vendor exome",
+      "help": "(Optional) Choose the vendor exome (enrichment kit) whose target coordinates will be used to guide variation calling. If provided, this will supply the '-L' command-line option to GATK HaplotypeCaller. If not provided, the app will call variants everywhere and not restrict itself to any target coordinates. See the app help for more information.",
+      "class": "string",
+      "optional": true,
+      "choices": [
+        "agilent_sureselect_human_all_exon_50mb",
+        "agilent_sureselect_human_all_exon_v1",
+        "agilent_sureselect_human_all_exon_v2",
+        "agilent_sureselect_human_all_exon_v4",
+        "agilent_sureselect_human_all_exon_v4_plus_utrs",
+        "agilent_sureselect_human_all_exon_v5",
+        "agilent_sureselect_human_all_exon_v5_plus_utrs",
+        "agilent_sureselect_human_kinome_v1",
+        "haloplex_arrhythmia_ilm",
+        "haloplex_cancer_research_panel_ilm",
+        "haloplex_cardiomyopathy_ilm",
+        "haloplex_chromosome_x_ilm",
+        "haloplex_connective_tissue_disorder_ilm",
+        "haloplex_exome",
+        "haloplex_iccg_ilm",
+        "haloplex_noonan_syndrome_ilm",
+        "illumina_nextera_exome",
+        "illumina_nextera_rapid_capture_exome",
+        "illumina_nextera_rapid_capture_expanded_exome",
+        "illumina_truseq_exome",
+        "nimblegen_seqcap_ez_50mb_human_utr_design",
+        "nimblegen_seqcap_ez_comprehensive_cancer_design",
+        "nimblegen_seqcap_ez_exome_utr",
+        "nimblegen_seqcap_ez_exome_v2",
+        "nimblegen_seqcap_ez_exome_v3",
+        "nimblegen_seqcap_ez_neurology_panel_design",
+        "vcrome_v2.1"
+      ],
+      "group": "Common"
+    },
+    {
+      "name": "padding",
+      "label": "Extra padding to add to targets",
+      "help": "The amount of padding, in number of bases, to add to each target interval. This is typically used to add padding around exons when analyzing exomes. The general Broad exome calling pipeline uses 100 bp padding by default. This will supply the '-ip' command-line option to GATK HaplotypeCaller. This option is ignored if no vendor exome is selected. Enter 0 to disable padding.",
+      "class": "int",
+      "default": 100,
+      "group": "Common"
+    },
+    {
+      "name": "output_format",
+      "label": "Output format",
+      "help": "Choose 'vcf' to output a regular (genotyped) VCF file. Choose 'gvcf' to output an intermediate gVCF file which can be later genotyped. Choose 'both' to output both types of files. For more information on the gVCF file format, see http://gatkforums.broadinstitute.org/discussion/4017/what-is-a-gvcf-and-how-is-it-different-from-a-regular-vcf.",
+      "class": "string",
+      "default": "vcf",
+      "choices": [
+        "vcf",
+        "gvcf",
+        "both"
+      ],
+      "group": "Common"
+    },
+    {
+      "name": "skip_markduplicates",
+      "label": "Skip the duplicate marking step?",
+      "help": "If selected, the duplicate marking step will be skipped. This is appropriate if the input BAM file contains already-marked duplicates by some other method, or if the protocol requires skipping this step (typical for HaloPlex).",
+      "class": "boolean",
+      "optional": true,
+      "group": "Common"
+    },
+    {
+      "name": "extra_md_options",
+      "label": "Extra command line options (for Picard MarkDuplicates)",
+      "help": "Extra command line options that will be supplied directly to the Picard MarkDuplicates execution. Example: REMOVE_DUPLICATES=true",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    },
+    {
+      "name": "extra_rtc_options",
+      "label": "Extra command line options (for RealignerTargetCreator)",
+      "help": "Extra command line options that will be supplied directly to the GATK RealignerTargetCreator execution. Example: -minReads 6",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    },
+    {
+      "name": "extra_ir_options",
+      "label": "Extra command line options (for IndelRealigner)",
+      "help": "Extra command line options that will be supplied directly to the GATK IndelRealigner execution. Example: -LOD 0.4",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    },
+    {
+      "name": "extra_br_options",
+      "label": "Extra command line options (for BaseRecalibrator)",
+      "help": "Extra command line options that will be supplied directly to the GATK BaseRecalibrator execution. Example: -maxCycle 100",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    },
+    {
+      "name": "extra_pr_options",
+      "label": "Extra command line options (for PrintReads)",
+      "help": "Extra command line options that will be supplied directly to the GATK PrintReads execution. Example: --downsample_coverage 500",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    },
+    {
+      "name": "extra_hc_options",
+      "label": "Extra command line options (for HaplotypeCaller)",
+      "help": "Extra command line options that will be supplied directly to the GATK HaplotypeCaller execution. Example: -stand_call_conf 20",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    },
+    {
+      "name": "extra_gg_options",
+      "label": "Extra command line options (for GenotypeGVCFs)",
+      "help": "Extra command line options that will be supplied directly to the GATK GenotypeGVCFs execution. Example: -maxAltAlleles 10",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "bam",
+      "label": "Refined mappings (BAM)",
+      "help": "A coordinate-sorted BAM file with the refined mappings.",
+      "class": "file",
+      "patterns": ["*.bam"]
+    },
+    {
+      "name": "bai",
+      "label": "Refined mappings index",
+      "help": "The associated BAM index file.",
+      "class": "file",
+      "patterns": ["*.bai"]
+    },
+    {
+      "name": "vcf",
+      "label": "Variants (VCF)",
+      "help": "A gzipped VCF file with the called variants.",
+      "class": "file",
+      "patterns": ["*.vcf.gz"],
+      "optional": true
+    },
+    {
+      "name": "vcf_tbi",
+      "label": "Variants (VCF) index",
+      "help": "A tabix index (TBI) file with the associated variants index.",
+      "class": "file",
+      "patterns": ["*.vcf.gz.tbi"],
+      "optional": true
+    },
+    {
+      "name": "gvcf",
+      "label": "Variants (gVCF)",
+      "help": "A gzipped gVCF file with the called variants.",
+      "class": "file",
+      "patterns": ["*.g.vcf.gz"],
+      "optional": true
+    },
+    {
+      "name": "gvcf_tbi",
+      "label": "Variants (gVCF) index",
+      "help": "A tabix index (TBI) file with the associated variants index.",
+      "class": "file",
+      "patterns": ["*.g.vcf.gz.tbi"],
+      "optional": true
+    }
+  ],
+  "runSpec": {
+    "execDepends": [
+      {
+        "name": "openjdk-7-jre-headless"
+      }
+    ],
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem1_ssd1_x8"
+      }
+    },
+    "file": "src/code.sh",
+    "interpreter": "bash"
+  },
+  "access": {
+    "project": "VIEW"
+  },
+  "details": {
+    "whatsNew": "* 1.0.1: Adding explicit tabix indexing for older GATK versions"
+  }
+}
