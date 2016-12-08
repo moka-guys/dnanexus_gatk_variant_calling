@@ -147,6 +147,12 @@
       "patterns": ["*.bam"]
     },
     {
+      "name": "outputmetrics",
+      "label": "Mark Duplicates Output Metrics",
+      "help": "The outputmetrics  files from picard mark duplicates.",
+      "class": "file"
+    },
+    {
       "name": "bai",
       "label": "Refined mappings index",
       "help": "The associated BAM index file.",

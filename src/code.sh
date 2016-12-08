@@ -136,9 +136,10 @@ if [[ ! -e output.vcf.gz.tbi ]]; then
 fi
 
 mark-section "uploading results"
-mkdir -p ~/out/bam/output/ ~/out/bai/output/
+mkdir -p ~/out/bam/output/ ~/out/bai/output/ ~/out/outputmetrics/QC/
 mv recal.bam ~/out/bam/output/"$sorted_bam_prefix".refined.bam
 mv recal.bai ~/out/bai/output/"$sorted_bam_prefix".refined.bam.bai
+mv output.metrics ~/out/outputmetrics/QC/"$sorted_bam_prefix".output.metrics
 
 if [[ "$output_format" != "gvcf" ]]; then
   mkdir -p ~/out/vcf/output/ ~/out/vcf_tbi/output/
