@@ -4,11 +4,6 @@
 # and to output each line as it is executed -- useful for debugging
 set -e -x -o pipefail
 
-#
-# Calculate 80% of memory size, for java
-#
-head -n1 /proc/meminfo | awk '{print int($2*0.8/1024)}' >.mem_in_mb.txt
-java="java -Xmx$(<.mem_in_mb.txt)m"
 
 #
 # This app is only a wrapper. The actual GATK3 software must be provided
@@ -16,14 +11,38 @@ java="java -Xmx$(<.mem_in_mb.txt)m"
 #
 # Locate and download the GATK jar file.
 #
-mark-section "locating GATK jar file"
-download-gatk-jar.sh
+#mark-section "locating GATK jar file"
+#download-gatk-jar.sh
 
 #
 # Fetch inputs
 #
 mark-section "downloading inputs"
-dx-download-all-inputs
+#dx-download-all-inputs
+
+dx-download-all-inputs --parallel
+
+mv ~/in/gatk_jar_file/* ~/GenomeAnalysisTK.jar
+
+# Show all the java versions installed on this worker
+# Show the java version the worker is using
+echo $(java -version)
+
+#
+# Use java7 as the default java version. 
+# If java7 doesn't work with the GATK version (3.6 and above) then switch to java8 and try again.
+#
+update-alternatives --set java /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+java -jar GenomeAnalysisTK.jar -version || (update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java && java -jar GenomeAnalysisTK.jar -version)
+
+
+
+#
+# Calculate 80% of memory size, for java
+#
+head -n1 /proc/meminfo | awk '{print int($2*0.8/1024)}' >.mem_in_mb.txt
+java="java -Xmx$(<.mem_in_mb.txt)m"
+
 
 #
 # Detect and download the appropriate human genome and related reference files
@@ -31,28 +50,28 @@ dx-download-all-inputs
 mark-section "detecting reference genome"
 samtools view -H "$sorted_bam_path" | grep ^@SQ | cut -f1-3 | md5sum | cut -c1-32 >.genome-fingerprint.txt
 case "$(<.genome-fingerprint.txt)" in
-    9220d59b0d7a55a43b22cad4a87f6797)
-      genome=b37
-      subgenome=b37
-      ;;
-    45340a8b2bb041655c6f6d4f9985944f)
-      genome=b37
-      subgenome=hs37d5
-      ;;
-    2f23b2f7c9731db07f0d1c8f9bc8c9d9)
-      genome=hg19
-      subgenome=hg19
-      ;;
-    53a8d91e94b765bd69c104611a2f796c)
-      genome=grch38
-      subgenome=grch38 # No alt analysis
-      dx-jobutil-report-error "The GRCh38 reference genome is not supported by this app."
-      ;;
-    *)
-      echo "Non-matching human genome. The input BAM contains the following chromosomes (names and sizes):"
-      samtools view -H "$sorted_bam_path" | grep ^@SQ | cut -f1-3
-      dx-jobutil-report-error "The reference genome of the input BAM file did not match any of the known human ones. Additional diagnostic information has been provided in the job log."
-      ;;
+  9220d59b0d7a55a43b22cad4a87f6797)
+    genome=b37
+    subgenome=b37
+    ;;
+  45340a8b2bb041655c6f6d4f9985944f)
+    genome=b37
+    subgenome=hs37d5
+    ;;
+  2f23b2f7c9731db07f0d1c8f9bc8c9d9)
+    genome=hg19
+    subgenome=hg19
+    ;;
+  53a8d91e94b765bd69c104611a2f796c)
+    genome=grch38
+    subgenome=grch38 # No alt analysis
+    dx-jobutil-report-error "The GRCh38 reference genome is not supported by this app."
+    ;;
+  *)
+    echo "Non-matching human genome. The input BAM contains the following chromosomes (names and sizes):"
+    samtools view -H "$sorted_bam_path" | grep ^@SQ | cut -f1-3
+    dx-jobutil-report-error "The reference genome of the input BAM file did not match any of the known human ones. Additional diagnostic information has been provided in the job log."
+    ;;
 esac
 
 mark-section "downloading reference genome"
@@ -119,6 +138,10 @@ rm -f realigned.bam
 mark-section "calling variants"
 if [[ "$output_format" == "vcf" ]]; then
   $java -jar GenomeAnalysisTK.jar -nct `nproc` -T HaplotypeCaller -R genome.fa -o output.vcf.gz --dbsnp $dbsnp -I recal.bam "${region_opts[@]}" $extra_hc_options
+  if [[ ! -e output.vcf.gz.tbi ]]; then
+    mark-section "indexing vcf"
+    tabix -p vcf output.vcf.gz
+  fi
 else
   $java -jar GenomeAnalysisTK.jar -nct `nproc` -T HaplotypeCaller -R genome.fa -o output.g.vcf.gz --dbsnp $dbsnp -I recal.bam -ERC GVCF -variant_index_type LINEAR -variant_index_parameter 128000 "${region_opts[@]}" $extra_hc_options
   if [[ ! -e output.g.vcf.gz.tbi ]]; then
@@ -127,12 +150,11 @@ else
   fi
   if [[ "$output_format" == "both" ]]; then
     $java -jar GenomeAnalysisTK.jar -nt `nproc` --dbsnp $dbsnp -T GenotypeGVCFs -R genome.fa -o output.vcf.gz -V output.g.vcf.gz $extra_gg_options
+    if [[ ! -e output.vcf.gz.tbi ]]; then
+      mark-section "indexing vcf"
+      tabix -p vcf output.vcf.gz
+    fi
   fi
-fi
-
-if [[ ! -e output.vcf.gz.tbi ]]; then
-  mark-section "indexing vcf"
-  tabix -p vcf output.vcf.gz
 fi
 
 mark-section "uploading results"

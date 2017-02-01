@@ -1,4 +1,4 @@
-# GATK3 Human Exome Pipeline 
+# GATK3 Human Exome Pipeline
 
 **Please read this important information before running the app.**
 
@@ -37,124 +37,36 @@ the target coordinates (plus whatever padding), you can decrease the time the ap
 positives (which tend to appear in low coverage regions, outside of target coordinates). Choice of a vendor exome kit is
 optional, and if not provided, variation calling will be performed across the whole genome.
 
-  <table> 
-   <thead>
-    <tr>
-     <th>Identifier</th>
-     <th>Marketing Name</th>
-    </tr> 
-   </thead>
-   <tbody>
-    <tr>
-     <td>agilent_sureselect_human_all_exon_50mb</td>
-     <td>Agilent SureSelect Human All Exon 50Mb</td>
-    </tr> 
-    <tr>
-     <td>agilent_sureselect_human_all_exon_v1</td>
-     <td>Agilent SureSelect Human All Exon V1</td>
-    </tr> 
-    <tr>
-     <td>agilent_sureselect_human_all_exon_v2</td>
-     <td>Agilent SureSelect Human All Exon V2</td>
-    </tr> 
-    <tr>
-     <td>agilent_sureselect_human_all_exon_v4</td>
-     <td>Agilent SureSelect Human All Exon V4</td>
-    </tr> 
-    <tr>
-     <td>agilent_sureselect_human_all_exon_v4_plus_utrs</td>
-     <td>Agilent SureSelect Human All Exon V4+UTRs</td>
-    </tr> 
-    <tr>
-     <td>agilent_sureselect_human_all_exon_v5</td>
-     <td>Agilent SureSelect Human All Exon V5</td>
-    </tr>
-    <tr>
-     <td>agilent_sureselect_human_all_exon_v5_plus_utrs</td>
-     <td>Agilent SureSelect Human All Exon V5+UTRs</td>
-    </tr> 
-    <tr>
-     <td>agilent_sureselect_human_kinome_v1</td>
-     <td>Agilent SureSelect Human Kinome V1</td>
-    </tr> 
-    <tr>
-     <td>haloplex_arrhythmia_ilm</td>
-     <td>HaloPlex Arrhythmia ILM</td>
-    </tr> 
-    <tr>
-     <td>haloplex_cancer_research_panel_ilm</td>
-     <td>HaloPlex Cancer Research Panel ILM</td>
-    </tr> 
-    <tr>
-     <td>haloplex_cardiomyopathy_ilm</td>
-     <td>HaloPlex Cardiomyopathy ILM</td>
-    </tr> 
-    <tr>
-     <td>haloplex_chromosome_x_ilm</td>
-     <td>HaloPlex Chromosome-X ILM</td>
-    </tr> 
-    <tr>
-     <td>haloplex_connective_tissue_disorder_ilm</td>
-     <td>HaloPlex Connective Tissue Disorder ILM</td>
-    </tr> 
-    <tr>
-     <td>haloplex_exome</td>
-     <td>HaloPlex Exome</td>
-    </tr> 
-    <tr>
-     <td>haloplex_iccg_ilm</td>
-     <td>HaloPlex ICCG ILM</td>
-    </tr> 
-    <tr>
-     <td>haloplex_noonan_syndrome_ilm</td>
-     <td>HaloPlex Noonan Syndrome ILM</td>
-    </tr> 
-    <tr>
-     <td>illumina_nextera_exome</td>
-     <td>Illumina Nextera Exome Enrichment Kit</td>
-    </tr> 
-    <tr>
-     <td>illumina_nextera_rapid_capture_exome</td>
-     <td>Illumina Nextera Rapid Capture Exome</td>
-    </tr> 
-    <tr>
-     <td>illumina_nextera_rapid_capture_expanded_exome</td>
-     <td>Illumina Nextera Rapid Capture Expanded Exome</td>
-    </tr> 
-    <tr>
-     <td>illumina_truseq_exome</td>
-     <td>Illumina TruSeq Exome Enrichment Kit</td>
-    </tr> 
-    <tr>
-     <td>nimblegen_seqcap_ez_50mb_human_utr_design</td>
-     <td>NimbleGen SeqCap EZ Designs: 50Mb Human UTR Design</td>
-    </tr> 
-    <tr>
-     <td>nimblegen_seqcap_ez_comprehensive_cancer_design</td>
-     <td>NimbleGen SeqCap EZ Designs: Comprehensive Cancer Design</td>
-    </tr> 
-    <tr>
-     <td>nimblegen_seqcap_ez_exome_utr</td>
-     <td>NimbleGen SeqCap EZ Exome +UTR</td>
-    </tr> 
-    <tr>
-     <td>nimblegen_seqcap_ez_exome_v2</td>
-     <td>NimbleGen SeqCap EZ Exome v2.0</td>
-    </tr> 
-    <tr>
-     <td>nimblegen_seqcap_ez_exome_v3</td>
-     <td>NimbleGen SeqCap EZ Exome v3.0</td>
-    </tr> 
-    <tr>
-     <td>nimblegen_seqcap_ez_neurology_panel_design</td>
-     <td>NimbleGen SeqCap EZ Designs: Neurology Panel Design</td>
-    </tr> 
-    <tr>
-     <td>vcrome_v2.1</td>
-     <td>SeqCap EZ HGSC VCRome</td>
-    </tr> 
-   </tbody>
-  </table> 
+| Identifier | Marketing Name |
+| --- | --- |
+| agilent_sureselect_human_all_exon_50mb | Agilent SureSelect Human All Exon 50Mb |
+| agilent_sureselect_human_all_exon_v1 | Agilent SureSelect Human All Exon V1 |
+| agilent_sureselect_human_all_exon_v2 | Agilent SureSelect Human All Exon V2 |
+| agilent_sureselect_human_all_exon_v4 | Agilent SureSelect Human All Exon V4 |
+| agilent_sureselect_human_all_exon_v4_plus_utrs | Agilent SureSelect Human All Exon V4+UTRs |
+| agilent_sureselect_human_all_exon_v5 | Agilent SureSelect Human All Exon V5 |
+| agilent_sureselect_human_all_exon_v5_plus_utrs | Agilent SureSelect Human All Exon V5+UTRs |
+| agilent_sureselect_human_all_exon_v6 | Agilent SureSelect Human All Exon V6 |
+| agilent_sureselect_human_kinome_v1 | Agilent SureSelect Human Kinome V1 |
+| haloplex_arrhythmia_ilm | HaloPlex Arrhythmia ILM |
+| haloplex_cancer_research_panel_ilm | HaloPlex Cancer Research Panel ILM |
+| haloplex_cardiomyopathy_ilm | HaloPlex Cardiomyopathy ILM |
+| haloplex_chromosome_x_ilm | HaloPlex Chromosome-X ILM |
+| haloplex_connective_tissue_disorder_ilm | HaloPlex Connective Tissue Disorder ILM |
+| haloplex_exome | HaloPlex Exome |
+| haloplex_iccg_ilm | HaloPlex ICCG ILM |
+| haloplex_noonan_syndrome_ilm | HaloPlex Noonan Syndrome ILM |
+| illumina_nextera_exome | Illumina Nextera Exome Enrichment Kit |
+| illumina_nextera_rapid_capture_exome | Illumina Nextera Rapid Capture Exome |
+| illumina_nextera_rapid_capture_expanded_exome | Illumina Nextera Rapid Capture Expanded Exome |
+| illumina_truseq_exome | Illumina TruSeq Exome Enrichment Kit |
+| nimblegen_seqcap_ez_50mb_human_utr_design | NimbleGen SeqCap EZ Designs: 50Mb Human UTR Design |
+| nimblegen_seqcap_ez_comprehensive_cancer_design | NimbleGen SeqCap EZ Designs: Comprehensive Cancer Design |
+| nimblegen_seqcap_ez_exome_utr | NimbleGen SeqCap EZ Exome +UTR |
+| nimblegen_seqcap_ez_exome_v2 | NimbleGen SeqCap EZ Exome v2.0 |
+| nimblegen_seqcap_ez_exome_v3 | NimbleGen SeqCap EZ Exome v3.0 |
+| nimblegen_seqcap_ez_neurology_panel_design | NimbleGen SeqCap EZ Designs: Neurology Panel Design |
+| vcrome_v2.1 | SeqCap EZ HGSC VCRome |
 
 * * *
 
