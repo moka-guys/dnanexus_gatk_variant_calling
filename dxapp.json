@@ -57,6 +57,7 @@
         "nimblegen_seqcap_ez_neurology_panel_design",
         "vcrome_v2.1"
       ],
+      "default": "agilent_sureselect_human_all_exon_v5",
       "group": "Common"
     },
     {

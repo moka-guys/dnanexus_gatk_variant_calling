@@ -81,15 +81,20 @@ dx cat "$APPDATA:/misc/gatk_resource_archives/${subgenome}.fasta-index.tar.gz" |
 #
 # Fetch vendor exome regions, if given
 #
-if [[ "$vendor_exome" != "" ]]
-then
-  mark-section "downloading exome coordinates"
-  dx download "$APPDATA:/vendor_exomes/${vendor_exome}_${genome}_targets.bed"
-  region_opts=("-L" "${vendor_exome}_${genome}_targets.bed")
-  if [[ "$padding" != "0" ]]
+if echo "$sorted_bam_path" | grep -q "WES"; then
+  echo "WES Sample - downloading bamfile to parse to HaplotypeCaller"
+  if [[ "$vendor_exome" != "" ]]
   then
-    region_opts+=("-ip" "$padding")
+    mark-section "downloading exome coordinates"
+    dx download "$APPDATA:/vendor_exomes/${vendor_exome}_${genome}_targets.bed"
+    region_opts=("-L" "${vendor_exome}_${genome}_targets.bed")
+    if [[ "$padding" != "0" ]]
+    then
+      region_opts+=("-ip" "$padding")
+    fi
   fi
+else 
+echo "Custom panel Sample no bed file will be passed to HaplotypeCaller"
 fi
 
 #
