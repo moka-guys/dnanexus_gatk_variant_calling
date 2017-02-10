@@ -162,6 +162,16 @@ else
   fi
 fi
 
+if [[ "$output_format" == "vcf" ]]; then
+tabix -p vcf $inhouse_annotations_path
+  $java -jar GenomeAnalysisTK.jar -nct `nproc` -T VariantAnnotator -R genome.fa -o output.inhouse.vcf.gz --resource:Inhouse $inhouse_annotations_path --resourceAlleleConcordance -E Inhouse.PreviousClassification -V output.vcf.gz
+  
+  if [[ ! -e output.inhouse.vcf.gz.tbi ]]; then
+    mark-section "indexing vcf"
+    tabix -p vcf output.inhouse.vcf.gz
+  fi
+fi
+
 mark-section "uploading results"
 mkdir -p ~/out/bam/output/ ~/out/bai/output/ ~/out/outputmetrics/QC/
 mv recal.bam ~/out/bam/output/"$sorted_bam_prefix".refined.bam
@@ -170,8 +180,8 @@ mv output.metrics ~/out/outputmetrics/QC/"$sorted_bam_prefix".output.metrics
 
 if [[ "$output_format" != "gvcf" ]]; then
   mkdir -p ~/out/vcf/output/ ~/out/vcf_tbi/output/
-  mv output.vcf.gz ~/out/vcf/output/"$sorted_bam_prefix".vcf.gz
-  mv output.vcf.gz.tbi ~/out/vcf_tbi/output/"$sorted_bam_prefix".vcf.gz.tbi
+  mv output.inhouse.vcf.gz ~/out/vcf/output/"$sorted_bam_prefix".inhouse.vcf.gz
+  mv output.inhouse.vcf.gz.tbi ~/out/vcf_tbi/output/"$sorted_bam_prefix".inhouse.vcf.gz.tbi
 fi
 
 if [[ "$output_format" != "vcf" ]]; then
