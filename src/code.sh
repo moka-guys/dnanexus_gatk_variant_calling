@@ -162,14 +162,11 @@ else
   fi
 fi
 
-if [[ "$output_format" == "vcf" ]]; then
 tabix -p vcf $inhouse_annotations_path
-  $java -jar GenomeAnalysisTK.jar -T VariantAnnotator -R genome.fa -o output.inhouse.vcf.gz --resource:Inhouse $inhouse_annotations_path --resourceAlleleConcordance -E Inhouse.PreviousClassification -V output.vcf.gz
-  
-  if [[ ! -e output.inhouse.vcf.gz.tbi ]]; then
-    #mark-section "indexing vcf"
-    tabix -p vcf output.inhouse.vcf.gz
-  fi
+$java -jar GenomeAnalysisTK.jar -T VariantAnnotator -R genome.fa -o output.inhouse.vcf.gz --resource:Inhouse $inhouse_annotations_path --resourceAlleleConcordance -E Inhouse.PreviousClassification -V output.vcf.gz
+
+if [[ ! -e output.inhouse.vcf.gz.tbi ]]; then
+  tabix -p vcf output.inhouse.vcf.gz
 fi
 
 #mark-section "uploading results"
