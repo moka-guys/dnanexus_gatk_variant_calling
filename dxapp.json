@@ -15,6 +15,12 @@
       "optional": false
     },
     {
+      "name": "inhouse_annotations",
+      "label": "Inhouse annotation vcf file",
+      "help": "A vcf file containing the previous classifications of variants.",
+      "class": "file"
+    },
+    {
       "name": "sorted_bam",
       "label": "Sorted mappings",
       "help": "A coordinate-sorted BAM file with the human mappings to be processed through the pipeline.",
