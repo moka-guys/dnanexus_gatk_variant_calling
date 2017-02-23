@@ -78,28 +78,22 @@ esac
 APPDATA=project-B6JG85Z2J35vb6Z7pQ9Q02j8
 dx cat "$APPDATA:/misc/gatk_resource_archives/${subgenome}.fasta-index.tar.gz" | tar zxf -
 
-#
-# Fetch vendor exome regions, if given
-#
-if echo "$sorted_bam_path" | grep -q "WES"; then
-  echo "WES Sample - downloading bamfile to parse to HaplotypeCaller"
-  if [[ "$vendor_exome" != "" ]]
-  then
-    #mark-section "downloading exome coordinates"
-    dx download "$APPDATA:/vendor_exomes/${vendor_exome}_${genome}_targets.bed"
-    region_opts=("-L" "${vendor_exome}_${genome}_targets.bed")
-    if [[ "$padding" != "0" ]]
-    then
-      region_opts+=("-ip" "$padding")
-    fi
-  fi
+
+# If WES assigne vendor exome bedfile to region_opts
+if echo "$sorted_bam_path" | grep -q 'WES\|Pan493' ; then
+    echo "WES Sample - specifying bamfile to parse to HaplotypeCaller"
+    region_opts=("-L" "/home/dnanexus/in/vendor_exome_bedfile/$vendor_exome_bedfile_prefix.bed")
+        if [[ "$padding" != "0" ]]
+            then
+                region_opts+=("-ip" "$padding")
+        fi
 else 
-echo "Custom panel Sample no bed file will be passed to HaplotypeCaller"
+    echo "Custom panel Sample no bed file will be passed to HaplotypeCaller"
 fi
 
-#
+echo $region_opts
+
 # Fetch GATK resources (these have been prepared in archives)
-#
 #mark-section "fetching GATK resources"
 dx cat "$APPDATA:/misc/gatk_resource_archives/gatk.resources.${genome}.tar" | tar xf -
 known1="1000G_phase1.indels.${genome}.vcf.gz"
@@ -162,12 +156,6 @@ else
   fi
 fi
 
-tabix -p vcf $inhouse_annotations_path
-$java -jar GenomeAnalysisTK.jar -T VariantAnnotator -R genome.fa -o output.inhouse.vcf.gz --resource:Inhouse $inhouse_annotations_path --resourceAlleleConcordance -E Inhouse.PreviousClassification -V output.vcf.gz
-
-if [[ ! -e output.inhouse.vcf.gz.tbi ]]; then
-  tabix -p vcf output.inhouse.vcf.gz
-fi
 
 #mark-section "uploading results"
 mkdir -p ~/out/bam/output/ ~/out/bai/output/ ~/out/outputmetrics/QC/
@@ -177,8 +165,8 @@ mv output.metrics ~/out/outputmetrics/QC/"$sorted_bam_prefix".output.metrics
 
 if [[ "$output_format" != "gvcf" ]]; then
   mkdir -p ~/out/vcf/output/ ~/out/vcf_tbi/output/
-  mv output.inhouse.vcf.gz ~/out/vcf/output/"$sorted_bam_prefix".inhouse.vcf.gz
-  mv output.inhouse.vcf.gz.tbi ~/out/vcf_tbi/output/"$sorted_bam_prefix".inhouse.vcf.gz.tbi
+  mv output.vcf.gz ~/out/vcf/output/"$sorted_bam_prefix".vcf.gz
+  mv output.vcf.gz.tbi ~/out/vcf_tbi/output/"$sorted_bam_prefix".vcf.gz.tbi
 fi
 
 if [[ "$output_format" != "vcf" ]]; then
