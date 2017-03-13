@@ -30,7 +30,6 @@ The reference sequence is obtained by reading the BAM header and is downloaded f
 1. GATK JAR file
 This app is only a wrapper for the GATK 3.x software, and requires that you appropriately license and obtain that software yourself.
 After licensing GATK, you should have received a file with the `GenomeAnalysisTK` prefix and the `.jar` suffix, such as `GenomeAnalysisTK.jar` or `GenomeAnalysisTK-3.4-0.jar`. 
-
 This file must be stated as an input.
 
 2. BAM file 
