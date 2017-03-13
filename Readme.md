@@ -28,9 +28,10 @@ The reference sequence is obtained by reading the BAM header and is downloaded f
 ## What data are required for this app to run?
 
 1. GATK JAR file
-This app is only a wrapper for the GATK 3.x software, and requires that you appropriately license and obtain that software yourself.
-After licensing GATK, you should have received a file with the `GenomeAnalysisTK` prefix and the `.jar` suffix, such as `GenomeAnalysisTK.jar` or `GenomeAnalysisTK-3.4-0.jar`. 
-This file must be stated as an input.
+ * This app is only a wrapper for the GATK 3.x software, and requires that you appropriately license and obtain that software yourself.
+ * After licensing GATK, you should have received a file with the `GenomeAnalysisTK` prefix and the `.jar` suffix, such as `GenomeAnalysisTK.jar` or `GenomeAnalysisTK-3.4-0.jar`. 
+
+ * This file must be stated as an input.
 
 2. BAM file 
 This app requires a coordinate-sorted BAM file (`*.bam`). The app automatically detects the reference genome (hg19, GRCh37/b37, or GRCh37+decoy/hs37d5) based on the BAM file header, and uses the appropriate GATK resources (dbSNP and known indels).
@@ -49,7 +50,7 @@ The Mark duplicates output metrics file which is used to produce run-wide QC.
 3. VCF (and index)
 The app also outputs a _genotyped_ VCF file (`*.vcf.gz`) and its associated tabix index (`*.vcf.gz.tbi`), or an intermediate gVCF file (`*.g.vcf.gz`) and its associated tabix index (`*.g.vcf.gz.tbi`), or all of the above. This behavior depends on the "Output format" option. The option works as follows:
 
-* When set to `vcf`, the app runs GATK HaplotypeCaller in regular (_genotyped_ VCF) mode; this calls variants and outputs only the locations of variation.
-* When set to `gvcf`, the app runs GATK HaplotypeCaller in gVCF mode; this outputs information for all locations, including sections which lack variation. The gVCF is an intermediate file that can be later used as input to GATK GenotypeGVCFs, which can take multiple gVCF files (from multiple samples) and genotype them, creating a cohort-level genotyped VCF. For more information, consult [this GATK article](http://gatkforums.broadinstitute.org/discussion/3893/calling-variants-on-cohorts-of-samples-using-the-haplotypecaller-in-gvcf-mode).
-* When set to `both`, the app runs GATK HaplotypeCaller in gVCF mode, producing a gVCF file. Subsequently, it runs GATK GenotypeGVCFs to genotype the gVCF into a regular VCF.
+ * When set to `vcf`, the app runs GATK HaplotypeCaller in regular (_genotyped_ VCF) mode; this calls variants and outputs only the locations of variation.
+ * When set to `gvcf`, the app runs GATK HaplotypeCaller in gVCF mode; this outputs information for all locations, including sections which lack variation. The gVCF is an intermediate file that can be later used as input to GATK GenotypeGVCFs, which can take multiple gVCF files (from multiple samples) and genotype them, creating a cohort-level genotyped VCF. For more information, consult [this GATK article](http://gatkforums.broadinstitute.org/discussion/3893/calling-variants-on-cohorts-of-samples-using-the-haplotypecaller-in-gvcf-mode).
+ * When set to `both`, the app runs GATK HaplotypeCaller in gVCF mode, producing a gVCF file. Subsequently, it runs GATK GenotypeGVCFs to genotype the gVCF into a regular VCF.
 
