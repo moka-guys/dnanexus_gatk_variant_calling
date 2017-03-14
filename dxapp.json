@@ -183,7 +183,7 @@
     ],
     "systemRequirements": {
       "main": {
-        "instanceType": "mem2_ssd1_x8"
+        "instanceType": "mem1_ssd1_x8"
       }
     },
     "file": "src/code.sh",
