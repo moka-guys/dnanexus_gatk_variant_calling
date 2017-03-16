@@ -81,14 +81,14 @@ dx cat "$APPDATA:/misc/gatk_resource_archives/${subgenome}.fasta-index.tar.gz" |
 
 # If WES assigne vendor exome bedfile to region_opts
 if echo "$sorted_bam_path" | grep -q 'WES\|Pan493' ; then
-    echo "WES Sample - specifying bamfile to parse to HaplotypeCaller"
+    echo "WES Sample - specifying BED file to use for variant calling by HaplotypeCaller"
     region_opts=("-L" "/home/dnanexus/in/vendor_exome_bedfile/$vendor_exome_bedfile_prefix.bed")
         if [[ "$padding" != "0" ]]
             then
                 region_opts+=("-ip" "$padding")
         fi
 else 
-    echo "Custom panel Sample no bed file will be passed to HaplotypeCaller"
+    echo "Custom panel Sample no BED file will be passed to HaplotypeCaller"
 fi
 
 echo $region_opts
