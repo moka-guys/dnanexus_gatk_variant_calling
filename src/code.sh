@@ -91,7 +91,7 @@ else
     echo "Custom panel Sample no BED file will be passed to HaplotypeCaller"
 fi
 
-echo $region_opts
+#echo $region_opts
 
 # Fetch GATK resources (these have been prepared in archives)
 #mark-section "fetching GATK resources"
