@@ -11,6 +11,7 @@ Use this app when you have mapped exome reads to the human genome, and want to i
 ## What does this app do?
 
 This app implements the GATK 3.x best practices pipeline. It takes a BAM file as input, refines the BAM (by deduplicating, realigning, and recalibrating) before it calls variants using GATK HaplotypeCaller. It outputs the refined mappings as well as the called variants. 
+NOTE: This app does not perform variant recalibration.
 
 This app has been modified to work with exome and custom panels.
 
