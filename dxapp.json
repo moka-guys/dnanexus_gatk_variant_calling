@@ -1,9 +1,9 @@
 {
   "name": "gatk3_human_exome_pipeline",
   "title": "GATK3 Human Exome Pipeline",
-  "summary": "(Requires a user-provided GATK 3.x jar file). Implements the GATK 3.x best practices pipeline for human exomes, including deduplicating, realigning and recalibrating mappings, and calling variants.",
+  "summary": "v1.3 - (Requires a user-provided GATK 3.x jar file). Implements the GATK 3.x best practices pipeline for human exomes, including deduplicating, realigning and recalibrating mappings, and calling variants.",
     "properties": {
-    "github release": "v1.2"
+    "github release": "v1.3"
   },
   "dxapi": "1.0.0",
   "openSource": true,
@@ -186,6 +186,8 @@
         "instanceType": "mem1_ssd1_x8"
       }
     },
+    "distribution" : "Ubuntu",
+    "release" : "14.04",
     "file": "src/code.sh",
     "interpreter": "bash"
   },

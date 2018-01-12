@@ -1,4 +1,4 @@
-# GATK3 Human Exome Pipeline
+# GATK3 Human Exome Pipeline (github release v 1.3)
 
 **Please read this important information before running the app.**
 
