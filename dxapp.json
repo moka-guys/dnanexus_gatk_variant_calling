@@ -1,13 +1,11 @@
 {
   "name": "gatk3_human_exome_pipeline",
   "title": "GATK3 Human Exome Pipeline",
-  "summary": "v1.2.1 - (Requires a user-provided GATK 3.x jar file). Implements the GATK 3.x best practices pipeline for human exomes, including deduplicating, realigning and recalibrating mappings, and calling variants.",
-    "properties": {
-    "github release": "v1.2.1"
+  "summary": "v1.3 - (Requires a user-provided GATK 3.x jar file). Implements the GATK 3.x best practices pipeline for human exomes, including deduplicating, realigning and recalibrating mappings, and calling variants.",
+  "properties": {
+    "github release": "v1.3"
   },
   "dxapi": "1.0.0",
-  "openSource": true,
-  "version": "1.0.5",
   "inputSpec": [
     {
       "name": "gatk_jar_file",
@@ -24,15 +22,15 @@
       "class": "file",
       "patterns": ["*.bam"]
     },
-     {
+    {
       "name": "vendor_exome_bedfile",
       "label": "Vendor exome bedfile",
       "help": "Select the bed file which will be used to filter by haplotype caller. If a custom panel this input will not be downloaded.",
       "class": "file",
-      "optional": true,
-      "patterns": ["*.bed"]
+      "patterns": ["*.bed"],
+      "optional": true
     },
-     {
+    {
       "name": "padding",
       "label": "Extra padding to add to targets",
       "help": "The amount of padding, in number of bases, to add to each target interval. This is typically used to add padding around exons when analyzing exomes. The general Broad exome calling pipeline uses 100 bp padding by default. This will supply the '-ip' command-line option to GATK HaplotypeCaller. This option is ignored if no vendor exome is selected. Enter 0 to disable padding.",
@@ -126,7 +124,7 @@
       "class": "file",
       "patterns": ["*.bam"]
     },
-        {
+    {
       "name": "outputmetrics",
       "label": "Mark Duplicates Output Metrics",
       "help": "The outputmetrics  files from picard mark duplicates.",
@@ -181,22 +179,29 @@
         "name": "openjdk-8-jre-headless"
       }
     ],
+    "systemRequirementsByRegion": {
+      "aws:us-east-1": {
+        "main": {
+          "instanceType": "mem1_ssd1_x8"
+        }
+      }
+    },
     "systemRequirements": {
       "main": {
         "instanceType": "mem1_ssd1_x8"
       }
     },
+    "distribution" : "Ubuntu",
+    "release" : "14.04",
     "file": "src/code.sh",
-    "interpreter": "bash"
+    "release": "14.04",
+    "interpreter": "bash",
+    "distribution": "Ubuntu"
+  },
+  "access": {
+    "project": "VIEW"
   },
   "details": {
     "whatsNew": "* 1.0.5: Markdown fix in documentation\n* 1.0.4: GATK .jar file is now a required input. Allowing the applet to work with any version of GATK3.x, including GATK3.6.\n* 1.0.3: Adding Agilent SureSelect Human All Exon v6\n* 1.0.2: Bug fixes\n* 1.0.1: Adding explicit tabix indexing for older GATK versions"
-  },
-  "categories": [
-    "Variation Calling",
-    "Pipelines"
-  ],
-  "access": {
-    "project": "VIEW"
   }
 }
