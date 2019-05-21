@@ -66,7 +66,7 @@ APPDATA=project-B6JG85Z2J35vb6Z7pQ9Q02j8
 dx cat "$APPDATA:/misc/gatk_resource_archives/${subgenome}.fasta-index.tar.gz" | tar zxf -
 
 
-# If BED file is given to limit variant calling add to region_opts
+# If BED file is given to limit variant calling add to region_opts. (-e returns true if the file exists)
 if [[ -e $bedfile_path ]]; then
     echo "BED file provided to limit variant calling to specified regions"
     region_opts=("-L" "$bedfile_path")
@@ -128,6 +128,7 @@ rm -f realigned.bam
 # if just VCF
 if [[ "$output_format" == "vcf" ]]; then
   $java -jar GenomeAnalysisTK.jar -nct `nproc` -T HaplotypeCaller -R genome.fa -o output.vcf.gz --dbsnp $dbsnp -I recal.bam "${region_opts[@]}" $extra_hc_options
+  # only index VCF if it doesn't already exist (-e returns true if the file exists)
   if [[ ! -e output.vcf.gz.tbi ]]; then
     mark-section "indexing vcf"
     tabix -p vcf output.vcf.gz
@@ -135,6 +136,7 @@ if [[ "$output_format" == "vcf" ]]; then
 # if not vcf output gVCF
 else
   $java -jar GenomeAnalysisTK.jar -nct `nproc` -T HaplotypeCaller -R genome.fa -o output.g.vcf.gz --dbsnp $dbsnp -I recal.bam -ERC GVCF -variant_index_type LINEAR -variant_index_parameter 128000 "${region_opts[@]}" $extra_hc_options
+  # only index VCF if it doesn't already exist (-e returns true if the file exists)
   if [[ ! -e output.g.vcf.gz.tbi ]]; then
     mark-section "indexing gvcf"
     tabix -p vcf output.g.vcf.gz
@@ -142,6 +144,7 @@ else
   # if output is both repeat, for VCF
   if [[ "$output_format" == "both" ]]; then
     $java -jar GenomeAnalysisTK.jar -nt `nproc` --dbsnp $dbsnp -T GenotypeGVCFs -R genome.fa -o output.vcf.gz -V output.g.vcf.gz $extra_gg_options
+    # only index VCF if it doesn't already exist (-e returns true if the file exists)
     if [[ ! -e output.vcf.gz.tbi ]]; then
       mark-section "indexing vcf"
       tabix -p vcf output.vcf.gz
@@ -151,23 +154,25 @@ fi
 
 
 mark-section "uploading results"
-mkdir -p ~/out/bam/output/ ~/out/bai/output/ ~/out/outputmetrics/QC/
+# make output folders
+mkdir -p ~/out/bam/output/ ~/out/bai/output/ ~/out/outputmetrics/QC/ ~/out/vcf/output/ ~/out/vcf_tbi/output/  ~/out/gvcf/output/ ~/out/gvcf_tbi/output/
+
+# move and rename output files
 mv recal.bam ~/out/bam/output/"$sorted_bam_prefix".refined.bam
 mv recal.bai ~/out/bai/output/"$sorted_bam_prefix".refined.bam.bai
-# test if mark duplicates is was requested before trying to move mark duplicates output metrics
+
+# test if mark duplicates was requested before trying to move mark duplicates output metrics
 if [[ "$skip_markduplicates" != "true" ]]
 then
     mv output.metrics ~/out/outputmetrics/QC/"$sorted_bam_prefix".output.metrics
 fi
 
 if [[ "$output_format" != "gvcf" ]]; then
-  mkdir -p ~/out/vcf/output/ ~/out/vcf_tbi/output/
   mv output.vcf.gz ~/out/vcf/output/"$sorted_bam_prefix".vcf.gz
   mv output.vcf.gz.tbi ~/out/vcf_tbi/output/"$sorted_bam_prefix".vcf.gz.tbi
 fi
 
 if [[ "$output_format" != "vcf" ]]; then
-  mkdir -p ~/out/gvcf/output/ ~/out/gvcf_tbi/output/
   mv output.g.vcf.gz ~/out/gvcf/output/"$sorted_bam_prefix".g.vcf.gz
   mv output.g.vcf.gz.tbi ~/out/gvcf_tbi/output/"$sorted_bam_prefix".g.vcf.gz.tbi
 fi
